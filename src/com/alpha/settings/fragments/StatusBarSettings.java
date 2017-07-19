@@ -33,8 +33,9 @@ import androidx.preference.SwitchPreference;
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
 import com.android.internal.util.custom.cutout.CutoutUtils;
 import com.android.settings.R;
-import com.android.settings.custom.preference.SystemSettingListPreference;
 import com.android.settings.SettingsPreferenceFragment;
+import com.android.settings.custom.preference.SystemSettingListPreference;
+import com.android.settings.custom.utils.TelephonyUtils;
 import com.android.settings.search.BaseSearchIndexProvider;
 
 import com.android.settingslib.search.SearchIndexable;
@@ -60,10 +61,13 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     private static final int STATUS_BAR_BATTERY_STYLE_TEXT = 4;
     private static final int STATUS_BAR_BATTERY_STYLE_HIDDEN = 5;
 
+    private static final String KEY_SHOW_FOURG = "show_fourg_icon";
+
     private SystemSettingListPreference mStatusBarClock;
     private SystemSettingListPreference mStatusBarAmPm;
     private SystemSettingListPreference mStatusBarBattery;
     private SystemSettingListPreference mStatusBarBatteryShowPercent;
+    private SwitchPreference mShowFourg;
 
     private PreferenceCategory mStatusBarBatteryCategory;
     private PreferenceCategory mStatusBarClockCategory;
@@ -73,18 +77,24 @@ public class StatusBarSettings extends SettingsPreferenceFragment
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.sb_settings);
 
+        final PreferenceScreen prefScreen = getPreferenceScreen();
+
+        mStatusBarClockCategory = prefScreen.findPreference(CATEGORY_CLOCK);
         mStatusBarAmPm = findPreference(STATUS_BAR_AM_PM);
         mStatusBarClock = findPreference(STATUS_BAR_CLOCK_STYLE);
         mStatusBarClock.setOnPreferenceChangeListener(this);
 
-        mStatusBarClockCategory = getPreferenceScreen().findPreference(CATEGORY_CLOCK);
-
+        mStatusBarBatteryCategory = prefScreen.findPreference(CATEGORY_BATTERY);
         mStatusBarBatteryShowPercent = findPreference(STATUS_BAR_SHOW_BATTERY_PERCENT);
         mStatusBarBattery = findPreference(STATUS_BAR_BATTERY_STYLE);
         mStatusBarBattery.setOnPreferenceChangeListener(this);
         enableStatusBarBatteryDependents(mStatusBarBattery.getIntValue(0));
 
-        mStatusBarBatteryCategory = getPreferenceScreen().findPreference(CATEGORY_BATTERY);
+        mShowFourg = findPreference(KEY_SHOW_FOURG);
+
+        if (!TelephonyUtils.isVoiceCapable(getActivity())) {
+            prefScreen.removePreference(mShowFourg);
+        }
     }
 
     @Override

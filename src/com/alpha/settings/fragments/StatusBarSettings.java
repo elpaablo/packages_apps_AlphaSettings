@@ -53,7 +53,6 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     private static final String ICON_BLACKLIST = "icon_blacklist";
 
     private static final String STATUS_BAR_CLOCK_STYLE = "status_bar_clock";
-    private static final String STATUS_BAR_AM_PM = "status_bar_am_pm";
     private static final String STATUS_BAR_BATTERY_STYLE = "status_bar_battery_style";
     private static final String STATUS_BAR_SHOW_BATTERY_PERCENT = "status_bar_show_battery_percent";
 
@@ -65,7 +64,6 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     private static final String KEY_USE_OLD_MOBILETYPE = "use_old_mobiletype";
 
     private SystemSettingListPreference mStatusBarClock;
-    private SystemSettingListPreference mStatusBarAmPm;
     private SystemSettingListPreference mStatusBarBattery;
     private SystemSettingListPreference mStatusBarBatteryShowPercent;
     private SwitchPreference mShowFourg;
@@ -82,7 +80,6 @@ public class StatusBarSettings extends SettingsPreferenceFragment
         final PreferenceScreen prefScreen = getPreferenceScreen();
 
         mStatusBarClockCategory = prefScreen.findPreference(CATEGORY_CLOCK);
-        mStatusBarAmPm = findPreference(STATUS_BAR_AM_PM);
         mStatusBarClock = findPreference(STATUS_BAR_CLOCK_STYLE);
         mStatusBarClock.setOnPreferenceChangeListener(this);
 
@@ -118,11 +115,6 @@ public class StatusBarSettings extends SettingsPreferenceFragment
             getPreferenceScreen().removePreference(mStatusBarBatteryCategory);
         } else {
             getPreferenceScreen().addPreference(mStatusBarBatteryCategory);
-        }
-
-        if (DateFormat.is24HourFormat(getActivity())) {
-            mStatusBarAmPm.setEnabled(false);
-            mStatusBarAmPm.setSummary(R.string.status_bar_am_pm_info);
         }
 
         if (isNetworkTrafficOnStatusBar()){

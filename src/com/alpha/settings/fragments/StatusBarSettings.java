@@ -62,12 +62,14 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     private static final int STATUS_BAR_BATTERY_STYLE_HIDDEN = 5;
 
     private static final String KEY_SHOW_FOURG = "show_fourg_icon";
+    private static final String KEY_USE_OLD_MOBILETYPE = "use_old_mobiletype";
 
     private SystemSettingListPreference mStatusBarClock;
     private SystemSettingListPreference mStatusBarAmPm;
     private SystemSettingListPreference mStatusBarBattery;
     private SystemSettingListPreference mStatusBarBatteryShowPercent;
     private SwitchPreference mShowFourg;
+    private SwitchPreference mOldMobileType;
 
     private PreferenceCategory mStatusBarBatteryCategory;
     private PreferenceCategory mStatusBarClockCategory;
@@ -91,9 +93,11 @@ public class StatusBarSettings extends SettingsPreferenceFragment
         enableStatusBarBatteryDependents(mStatusBarBattery.getIntValue(0));
 
         mShowFourg = findPreference(KEY_SHOW_FOURG);
+        mOldMobileType = findPreference(KEY_USE_OLD_MOBILETYPE);
 
         if (!TelephonyUtils.isVoiceCapable(getActivity())) {
             prefScreen.removePreference(mShowFourg);
+            prefScreen.removePreference(mOldMobileType);
         }
     }
 

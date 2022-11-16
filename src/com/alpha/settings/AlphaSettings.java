@@ -17,7 +17,10 @@
 package com.alpha.settings;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.UserHandle;
+import android.provider.Settings;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
@@ -54,6 +57,38 @@ public class AlphaSettings extends DashboardFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        setAlphaDashboardStyle();
+    }
+
+    private void setAlphaDashboardStyle() {
+        int mDashBoardStyle = geSettingstDashboardStyle();
+        final PreferenceScreen mScreen = getPreferenceScreen();
+        final int mCount = mScreen.getPreferenceCount();
+        for (int i = 0; i < mCount; i++) {
+            final Preference mPreference = mScreen.getPreference(i);
+
+            String mKey = mPreference.getKey();
+
+            if (mKey == null) continue;
+
+            /*if (mKey.equals("alpha_logo")) {
+                mPreference.setLayoutResource(R.layout.alpha_logo);
+                continue;
+            }*/
+
+            if (mDashBoardStyle == 1 && mKey.equals("key_statusbar_settings")) {
+                mPreference.setLayoutResource(R.layout.dot_dashboard_preference_full_accent);
+            } else if (mDashBoardStyle == 2 && mKey.equals("key_statusbar_settings")) {
+                mPreference.setLayoutResource(R.layout.dot_dashboard_preference_full_accent_2);
+            } else {
+                mPreference.setLayoutResource(R.layout.dot_dashboard_preference_full);
+            }
+        }
+    }
+
+    private int geSettingstDashboardStyle() {
+        return Settings.System.getIntForUser(getContext().getContentResolver(),
+                Settings.System.SETTINGS_DASHBOARD_STYLE, 2, UserHandle.USER_CURRENT);
     }
 
     @Override

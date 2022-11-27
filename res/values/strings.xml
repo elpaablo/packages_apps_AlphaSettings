@@ -16,9 +16,6 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <!-- Alpha settings title-->
-    <string name="alpha_settings_title">Alpha settings</string>
-
     <!-- Categories -->
     <string name="button_settings_title">Buttons</string>
     <string name="gesture_settings_title">Gestures</string>

@@ -24,7 +24,6 @@ import android.provider.Settings;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import androidx.preference.Preference.OnPreferenceChangeListener;
 import androidx.preference.PreferenceFragment;
 
 import com.android.internal.logging.nano.MetricsProto;
@@ -60,6 +59,11 @@ public class AlphaSettings extends DashboardFragment {
         setAlphaDashboardStyle();
     }
 
+    public void onResume() {
+        super.onResume();
+        //setAlphaDashboardStyle();
+    }
+
     private void setAlphaDashboardStyle() {
         int mDashBoardStyle = geSettingstDashboardStyle();
         final PreferenceScreen mScreen = getPreferenceScreen();
@@ -71,17 +75,19 @@ public class AlphaSettings extends DashboardFragment {
 
             if (mKey == null) continue;
 
-            /*if (mKey.equals("alpha_logo")) {
-                mPreference.setLayoutResource(R.layout.alpha_logo);
+            if (mKey.equals("alphabet_header")) {
+                mPreference.setLayoutResource(R.layout.settings_alphabet_header);
                 continue;
-            }*/
+            }
 
-            if (mDashBoardStyle == 1 && mKey.equals("key_statusbar_settings")) {
-                mPreference.setLayoutResource(R.layout.dot_dashboard_preference_full_accent);
-            } else if (mDashBoardStyle == 2 && mKey.equals("key_statusbar_settings")) {
-                mPreference.setLayoutResource(R.layout.dot_dashboard_preference_full_accent_2);
-            } else {
-                mPreference.setLayoutResource(R.layout.dot_dashboard_preference_full);
+            if (mDashBoardStyle > 0) { // 0 = stock aosp style
+                if (mDashBoardStyle == 1 && mKey.equals("statusbar_settings_category")) {
+                    mPreference.setLayoutResource(R.layout.dot_dashboard_preference_full_accent_icon);
+                } else if (mDashBoardStyle == 2 && mKey.equals("statusbar_settings_category")) {
+                    mPreference.setLayoutResource(R.layout.dot_dashboard_preference_full_accent_2_icon);
+                } else {
+                    mPreference.setLayoutResource(R.layout.dot_dashboard_preference_full_icon);
+                }
             }
         }
     }

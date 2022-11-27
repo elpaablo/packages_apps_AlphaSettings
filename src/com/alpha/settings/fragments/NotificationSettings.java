@@ -24,7 +24,7 @@ import androidx.preference.PreferenceScreen;
 import androidx.preference.Preference.OnPreferenceChangeListener;
 import androidx.preference.PreferenceFragment;
 
-import com.android.internal.logging.nano.MetricsProto;
+import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
 
 import com.android.settings.R;
 import com.android.settings.SettingsPreferenceFragment;
@@ -39,7 +39,7 @@ public class NotificationSettings extends SettingsPreferenceFragment implements
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        addPreferencesFromResource(R.xml.notification_settings);
+        addPreferencesFromResource(R.xml.notif_settings);
 
         final PreferenceScreen prefScreen = getPreferenceScreen();
     }
@@ -52,10 +52,10 @@ public class NotificationSettings extends SettingsPreferenceFragment implements
 
     @Override
     public int getMetricsCategory() {
-        return MetricsProto.MetricsEvent.ALPHA;
+        return MetricsEvent.ALPHA;
     }
 
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
-            new BaseSearchIndexProvider(R.xml.alpha_settings);
+            new BaseSearchIndexProvider(R.xml.notif_settings);
 
 }

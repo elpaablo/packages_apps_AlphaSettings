@@ -21,7 +21,7 @@
         <!-- Status Bar -->
         <Preference
             android:key="statusbar_settings_category"
-            android:title="@string/statusbar_settings_title"
+            android:title="@string/status_bar_title"
             android:fragment="com.alpha.settings.fragments.StatusBarSettings"
             android:icon="@drawable/ic_settings_statusbar"/>
 

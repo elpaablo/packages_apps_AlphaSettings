@@ -48,7 +48,6 @@ public class StatusBarSettings extends SettingsPreferenceFragment
 
     private static final String CATEGORY_BATTERY = "status_bar_battery_key";
     private static final String CATEGORY_CLOCK = "status_bar_clock_key";
-    private static final String CATEGORY_BRIGHTNESS = "status_bar_brightness_category";
 
     private static final String ICON_BLACKLIST = "icon_blacklist";
 
@@ -56,26 +55,16 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     private static final String STATUS_BAR_AM_PM = "status_bar_am_pm";
     private static final String STATUS_BAR_BATTERY_STYLE = "status_bar_battery_style";
     private static final String STATUS_BAR_SHOW_BATTERY_PERCENT = "status_bar_show_battery_percent";
-    private static final String STATUS_BAR_QUICK_QS_PULLDOWN = "qs_quick_pulldown";
-    private static final String STATUS_BAR_QUICK_QS_SHOW_AUTO_BRIGHTNESS = "qs_show_auto_brightness";
 
     private static final int STATUS_BAR_BATTERY_STYLE_TEXT = 2;
 
-    private static final int PULLDOWN_DIR_NONE = 0;
-    private static final int PULLDOWN_DIR_RIGHT = 1;
-    private static final int PULLDOWN_DIR_LEFT = 2;
-
-    private SystemSettingListPreference mQuickPulldown;
     private SystemSettingListPreference mStatusBarClock;
     private SystemSettingListPreference mStatusBarAmPm;
     private SystemSettingListPreference mStatusBarBattery;
     private SystemSettingListPreference mStatusBarBatteryShowPercent;
 
-    private SwitchPreference mStatusBarQsShowAutoBrightness;
-
     private PreferenceCategory mStatusBarBatteryCategory;
     private PreferenceCategory mStatusBarClockCategory;
-    private PreferenceCategory mStatusBarBrightnessCategory;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,17 +83,6 @@ public class StatusBarSettings extends SettingsPreferenceFragment
         enableStatusBarBatteryDependents(mStatusBarBattery.getIntValue(0));
 
         mStatusBarBatteryCategory = getPreferenceScreen().findPreference(CATEGORY_BATTERY);
-
-        mQuickPulldown = findPreference(STATUS_BAR_QUICK_QS_PULLDOWN);
-        mQuickPulldown.setOnPreferenceChangeListener(this);
-        updateQuickPulldownSummary(mQuickPulldown.getIntValue(0));
-
-        mStatusBarBrightnessCategory = getPreferenceScreen().findPreference(CATEGORY_BRIGHTNESS);
-        mStatusBarQsShowAutoBrightness = mStatusBarBrightnessCategory.findPreference(STATUS_BAR_QUICK_QS_SHOW_AUTO_BRIGHTNESS);
-        if (!getResources().getBoolean(
-                com.android.internal.R.bool.config_automatic_brightness_available)){
-            mStatusBarBrightnessCategory.removePreference(mStatusBarQsShowAutoBrightness);
-        }
     }
 
     @Override
@@ -150,8 +128,6 @@ public class StatusBarSettings extends SettingsPreferenceFragment
                     mStatusBarClock.setEntries(R.array.status_bar_clock_position_entries_rtl);
                     mStatusBarClock.setEntryValues(R.array.status_bar_clock_position_values_rtl);
                 }
-                mQuickPulldown.setEntries(R.array.status_bar_quick_qs_pulldown_entries_rtl);
-                mQuickPulldown.setEntryValues(R.array.status_bar_quick_qs_pulldown_values_rtl);
             } else if (disallowCenteredClock) {
                 mStatusBarClock.setEntries(R.array.status_bar_clock_position_entries_notch);
                 mStatusBarClock.setEntryValues(R.array.status_bar_clock_position_values_notch);
@@ -167,9 +143,6 @@ public class StatusBarSettings extends SettingsPreferenceFragment
         int value = Integer.parseInt((String) newValue);
         String key = preference.getKey();
         switch (key) {
-            case STATUS_BAR_QUICK_QS_PULLDOWN:
-                updateQuickPulldownSummary(value);
-                break;
             case STATUS_BAR_BATTERY_STYLE:
                 enableStatusBarBatteryDependents(value);
                 break;
@@ -186,32 +159,6 @@ public class StatusBarSettings extends SettingsPreferenceFragment
 
     private void updateClockSummary(int value){
         mStatusBarClock.setSummary(getClockPositionSummary(value));
-    }
-
-    private void updateQuickPulldownSummary(int value) {
-        String summary = "";
-        if (getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL){
-            if (value == PULLDOWN_DIR_LEFT) {
-                value = PULLDOWN_DIR_RIGHT;
-            }else if (value == PULLDOWN_DIR_RIGHT) {
-                value = PULLDOWN_DIR_LEFT;
-            }
-        }
-        switch (value) {
-            case PULLDOWN_DIR_NONE:
-                summary = getResources().getString(
-                    R.string.status_bar_quick_qs_pulldown_off);
-                break;
-            case PULLDOWN_DIR_LEFT:
-                summary = getResources().getString(
-                    R.string.status_bar_quick_qs_pulldown_summary_left_edge);
-                break;
-            case PULLDOWN_DIR_RIGHT:
-                summary = getResources().getString(
-                    R.string.status_bar_quick_qs_pulldown_summary_right_edge);
-                break;
-        }
-        mQuickPulldown.setSummary(summary);
     }
 
     private String getClockPositionSummary(int value){

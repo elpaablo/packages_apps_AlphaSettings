@@ -43,6 +43,16 @@
             android:summary="@string/status_bar_brightness_slider_auto_summary"
             android:dependency="qs_show_brightness_slider"
             android:defaultValue="true" />
+
+        <com.android.settings.custom.preference.SecureSettingListPreference
+            android:key="qs_brightness_slider_position"
+            android:title="@string/qs_brightness_slider_position_title"
+            android:entries="@array/qs_brightness_slider_position_entries"
+            android:entryValues="@array/qs_brightness_slider_position_values"
+            android:dialogTitle="@string/qs_brightness_slider_position_title"
+            android:summary="%s"
+            android:dependency="qs_show_brightness_slider"
+            android:defaultValue="0" />
      </PreferenceCategory>
 
 </PreferenceScreen>

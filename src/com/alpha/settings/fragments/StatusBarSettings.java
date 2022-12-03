@@ -56,7 +56,9 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     private static final String STATUS_BAR_BATTERY_STYLE = "status_bar_battery_style";
     private static final String STATUS_BAR_SHOW_BATTERY_PERCENT = "status_bar_show_battery_percent";
 
-    private static final int STATUS_BAR_BATTERY_STYLE_TEXT = 2;
+
+    private static final int STATUS_BAR_BATTERY_STYLE_TEXT = 4;
+    private static final int STATUS_BAR_BATTERY_STYLE_HIDDEN = 5;
 
     private SystemSettingListPreference mStatusBarClock;
     private SystemSettingListPreference mStatusBarAmPm;
@@ -154,7 +156,8 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     }
 
     private void enableStatusBarBatteryDependents(int batteryIconStyle) {
-        mStatusBarBatteryShowPercent.setEnabled(batteryIconStyle != STATUS_BAR_BATTERY_STYLE_TEXT);
+        mStatusBarBatteryShowPercent.setEnabled(batteryIconStyle != STATUS_BAR_BATTERY_STYLE_TEXT &&
+                batteryIconStyle != STATUS_BAR_BATTERY_STYLE_HIDDEN);
     }
 
     private void updateClockSummary(int value){

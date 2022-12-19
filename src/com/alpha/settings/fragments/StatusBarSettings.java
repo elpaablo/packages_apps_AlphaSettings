@@ -16,6 +16,12 @@
  */
 package com.alpha.settings.fragments;
 
+import static com.android.internal.util.custom.clock.ClockConstants.CLOCK_POSITION_RIGHT;
+import static com.android.internal.util.custom.clock.ClockConstants.CLOCK_POSITION_CENTER;
+import static com.android.internal.util.custom.clock.ClockConstants.CLOCK_POSITION_LEFT;
+import static com.android.internal.util.custom.clock.ClockConstants.CLOCK_POSITION_HIDE;
+import static com.android.internal.util.custom.clock.ClockConstants.CLOCK_POSITION_DEFAULT;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -52,7 +58,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
 
     private static final String ICON_BLACKLIST = "icon_blacklist";
 
-    private static final String STATUS_BAR_CLOCK_STYLE = "status_bar_clock";
+    private static final String STATUS_BAR_CLOCK = "status_bar_clock";
     private static final String STATUS_BAR_BATTERY_STYLE = "status_bar_battery_style";
     private static final String STATUS_BAR_SHOW_BATTERY_PERCENT = "status_bar_show_battery_percent";
 
@@ -80,7 +86,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
         final PreferenceScreen prefScreen = getPreferenceScreen();
 
         mStatusBarClockCategory = prefScreen.findPreference(CATEGORY_CLOCK);
-        mStatusBarClock = findPreference(STATUS_BAR_CLOCK_STYLE);
+        mStatusBarClock = findPreference(STATUS_BAR_CLOCK);
         mStatusBarClock.setOnPreferenceChangeListener(this);
 
         mStatusBarBatteryCategory = prefScreen.findPreference(CATEGORY_BATTERY);
@@ -122,7 +128,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
             mStatusBarClock.setSummary(R.string.status_bar_clock_position_disabled_summary);
         }else{
             int value = Settings.System.getInt(getContentResolver(),
-                Settings.System.STATUS_BAR_CLOCK, 2);
+                Settings.System.STATUS_BAR_CLOCK, CLOCK_POSITION_DEFAULT);
             mStatusBarClock.setEnabled(true);
             mStatusBarClock.setValue(String.valueOf(value));
             updateClockSummary(value);
@@ -154,7 +160,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
             case STATUS_BAR_BATTERY_STYLE:
                 enableStatusBarBatteryDependents(value);
                 break;
-            case STATUS_BAR_CLOCK_STYLE:
+            case STATUS_BAR_CLOCK:
                 updateClockSummary(value);
                 break;
         }
@@ -171,12 +177,14 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     }
 
     private String getClockPositionSummary(int value){
-        if (value == 0){
+        if (value == CLOCK_POSITION_HIDE){
+            return getContext().getString(R.string.status_bar_clock_position_hidden);
+        } else if (value == CLOCK_POSITION_RIGHT) {
             return getContext().getString(R.string.status_bar_clock_position_right);
-        }else if (value == 1){
+        } else if (value == CLOCK_POSITION_CENTER) {
             return getContext().getString(R.string.status_bar_clock_position_center);
-        }else{
-            return getContext().getString(R.string.status_bar_clock_position_left); 
+        } else {
+            return getContext().getString(R.string.status_bar_clock_position_left);
         }
     }
 

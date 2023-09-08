@@ -331,4 +331,8 @@
 
     <string name="restricted_current_summary">Set max allowed current (mA)</string>
 
+    <!-- USB configuration -->
+    <string name="usb_default_config_title">USB configuration</string>
+    <string name="usb_default_config_summary">Choose the default behavior when connected to a device via USB</string>
+
 </resources>

@@ -42,4 +42,9 @@
 
     <attr name="secureValue" format="string" />
 
+    <declare-styleable name="AdaptivePreference">
+        <attr name="position" format="string" />
+        <attr name="isLineageSettings" format="boolean" />
+    </declare-styleable>
+
 </resources>

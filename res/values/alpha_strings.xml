@@ -204,4 +204,6 @@
     <string name="quickswitch_nexuslauncher">Nexus Launcher</string>
     <string name="quickswitch_lawnchair">Lawnchair</string>
 
+    <string name="reevaluating_theme">Reloading system themes...</string>
+
 </resources>

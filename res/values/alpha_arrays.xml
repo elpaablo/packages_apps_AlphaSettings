@@ -39,7 +39,7 @@
         <item>@string/status_bar_battery_style_filled_circle</item>
         <item>@string/status_bar_battery_style_text</item>
         <item>@string/status_bar_battery_style_hidden</item>
-        <item>@string/status_bar_battery_style_icon_big_circle</item>
+        <!--<item>@string/status_bar_battery_style_icon_big_circle</item>
         <item>@string/status_bar_battery_style_icon_big_dotted_circle</item>
         <item>@string/status_bar_battery_style_icon_landscape_buddy</item>
         <item>@string/status_bar_battery_style_icon_landscape_line</item>
@@ -53,7 +53,7 @@
         <item>@string/status_bar_battery_style_icon_landscape_ios15</item>
         <item>@string/status_bar_battery_style_icon_landscape_ios16</item>
         <item>@string/status_bar_battery_style_icon_landscape_origami</item>
-        <item>@string/status_bar_battery_style_icon_landscape_miui_pill</item>
+        <item>@string/status_bar_battery_style_icon_landscape_miui_pill</item>-->
     </string-array>
 
     <string-array name="status_bar_battery_style_values" translatable="false">
@@ -65,7 +65,7 @@
         <item>3</item>
         <item>4</item>
         <item>5</item>
-        <item>8</item>
+        <!--<item>8</item>
         <item>9</item>
         <item>10</item>
         <item>11</item>
@@ -79,7 +79,7 @@
         <item>19</item>
         <item>20</item>
         <item>21</item>
-        <item>22</item>
+        <item>22</item>-->
     </string-array>
 
     <string-array name="status_bar_battery_percent_no_text_inside_entries">

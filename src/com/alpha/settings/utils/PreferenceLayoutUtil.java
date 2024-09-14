@@ -17,6 +17,7 @@ package com.alpha.settings.utils;
 
 import android.content.Context;
 import androidx.preference.Preference;
+import android.provider.Settings;
 import com.android.internal.util.alpha.Utils;
 
 import java.util.Arrays;
@@ -27,14 +28,13 @@ import com.android.settings.R;
 
 public class PreferenceLayoutUtil {
 
-    private static int extraPreferenceOrder = -151;
+    private static int extraPreferenceOrder = -153;
 
     private static final String PACKAGE_WELLBEING = "com.google.android.apps.wellbeing";
     private static final String PACKAGE_GOOGLE_SERVICES = "com.google.android.gms";
 
     private static final Set<String> topPreferences = new HashSet<>(Arrays.asList(
             "top_level_network",
-            "top_level_system",
             "top_level_apps",
             "top_level_accessibility",
             "top_level_emergency",
@@ -48,18 +48,17 @@ public class PreferenceLayoutUtil {
             "top_level_storage",
             "top_level_notifications",
             "top_level_communal",
-            "top_level_safety_center"
+            "top_level_safety_center",
+            "top_level_accounts"
     ));
 
     private static final Set<String> bottomPreferences = new HashSet<>(Arrays.asList(
             "top_level_connected_devices",
             "top_level_sound",
             "top_level_wallpaper",
-            "top_level_location",
-            "top_level_accounts",
-            "top_level_about_device"
+            "top_level_location"
     ));
-    
+
     private static final Set<String> EXCLUDE_LIST = new HashSet<>(Arrays.asList(
             "top_level_alpha"
     ));
@@ -69,26 +68,70 @@ public class PreferenceLayoutUtil {
     }
 
     public static void setUpPreferenceLayout(Preference preference, Context context) {
+        boolean showHomePageShowcase = Settings.System.getInt(
+                context.getContentResolver(), "settings_homepage_showcase", 0) != 0;
+        boolean showAvatarCard = Settings.System.getInt(
+                context.getContentResolver(), "show_avatar_card_on_homepage", 0) != 0;
         String key = preference.getKey();
         if (EXCLUDE_LIST.contains(key)) {
             return;
         }
-        if ("top_level_wellbeing".equals(key) && Utils.isPackageInstalled(context, PACKAGE_WELLBEING)) {
-            preference.setLayoutResource(R.layout.top_level_preference_wellbeing_card);
-        } else if ("top_level_google".equals(key) && Utils.isPackageInstalled(context, PACKAGE_GOOGLE_SERVICES)) {
-            preference.setLayoutResource(R.layout.top_level_preference_google_card);
-        } else if (topPreferences.contains(key)) {
-            preference.setLayoutResource(R.layout.top_level_preference_top_card);
-        } else if (middlePreferences.contains(key)) {
-            preference.setLayoutResource(R.layout.top_level_preference_middle_card);
-        } else if (bottomPreferences.contains(key)) {
-            preference.setLayoutResource(R.layout.top_level_preference_bottom_card);
-        } else {
-            // highlight injected top level preference e.g OEM parts
-            int order = extraPreferenceOrder - 1;
-            updateStartOrder(order);
-            preference.setOrder(order);
-            preference.setLayoutResource(R.layout.top_level_preference_solo_card);
+        boolean isWellbeingInstalled = Utils.isPackageInstalled(context, PACKAGE_WELLBEING);
+        boolean isGoogleServiceInstalled = Utils.isPackageInstalled(context, PACKAGE_GOOGLE_SERVICES);
+        switch (key) {
+            case "top_level_wellbeing":
+                if (isWellbeingInstalled) {
+                    setPreferenceLayout(preference, context, "wellbeing", true);
+                }
+                break;
+            case "top_level_google":
+                if (isGoogleServiceInstalled) {
+                    setPreferenceLayout(preference, context, "google", true);
+                }
+                break;
+            case "top_level_system":
+                setPreferenceLayout(preference, context, showHomePageShowcase ? "bottom" : "middle", true);
+                break;
+            case "top_level_about_device":
+                preference.setLayoutResource(showHomePageShowcase ?
+                        R.layout.top_level_preference_about :
+                        AdaptivePreferenceUtils.getLayoutResourceId(context, "bottom", true));
+                preference.setOrder(showHomePageShowcase ? -151 : 11);
+                break;
+            case "top_level_usercard":
+                if (showAvatarCard) {
+                    preference.setVisible(true);
+                    preference.setLayoutResource(R.layout.top_level_usercard);
+                    preference.setOrder(-152);
+                } else {
+                    preference.setVisible(false);
+                }
+                break;
+            default:
+                // Handle other preferences (e.g., OEM parts)
+                if (topPreferences.contains(key)) {
+                    setPreferenceLayout(preference, context, "top", true);
+                    if (key.equals("top_level_display")) {
+                        preference.setOrder(-150);
+                    }
+                } else if (middlePreferences.contains(key)) {
+                    setPreferenceLayout(preference, context, "middle", true);
+                } else if (bottomPreferences.contains(key)) {
+                    setPreferenceLayout(preference, context, "bottom", true);
+                    if (key.equals("top_level_wallpaper")) {
+                        preference.setOrder(-140);
+                    }
+                } else {
+                    int order = extraPreferenceOrder - 1;
+                    updateStartOrder(order);
+                    preference.setOrder(order);
+                    setPreferenceLayout(preference, context, "solo", true);
+                }
+                break;
         }
+    }
+
+    private static void setPreferenceLayout(Preference preference, Context context, String layoutType, boolean useAdaptive) {
+        preference.setLayoutResource(AdaptivePreferenceUtils.getLayoutResourceId(context, layoutType, useAdaptive));
     }
 }

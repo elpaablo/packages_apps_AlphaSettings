@@ -93,11 +93,11 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp">
+                android:layout_marginEnd="16dp">
 
                 <androidx.preference.internal.PreferenceImageView
                     android:id="@android:id/icon"
-                    android:padding="16dp"
+                    android:padding="@dimen/top_level_icon_padding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/custom_surface_color"

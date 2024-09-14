@@ -17,4 +17,29 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
+     <array name="colored_pref_image_theme_colors">
+        <item>#007aff</item>
+        <item>#2fb151</item>
+        <item>#fb7c47</item>
+        <item>#fa7d4d</item>
+        <item>#fbb404</item>
+        <item>#e13e39</item>
+    </array>
+
+    <string-array name="settings_style_entries">
+        <item>@string/settings_style_aosp</item>
+        <item>@string/settings_style_dot</item>
+        <item>@string/settings_style_nad</item>
+        <item>@string/settings_style_oos</item>
+        <item>@string/settings_style_colorful</item>
+    </string-array>
+
+    <string-array name="settings_style_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
 </resources>

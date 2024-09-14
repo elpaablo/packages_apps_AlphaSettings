@@ -18,6 +18,7 @@ package com.alpha.settings.utils;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import com.android.settings.R;
 import android.widget.Toast;
@@ -29,7 +30,7 @@ public class AdaptivePreferenceUtils {
     private static final String overlayThemeTarget  = "com.android.systemui";
 
     public static void refreshTheme(Context context) {
-        final ThemeUtils themeUtils = new ThemeUtils(context);
+        final ThemeUtils themeUtils = ThemeUtils.getInstance(context);
         Toast.makeText(context, context.getString(R.string.reevaluating_theme), Toast.LENGTH_SHORT).show();
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -40,34 +41,122 @@ public class AdaptivePreferenceUtils {
         }, Toast.LENGTH_SHORT + 500L);
     }
 
-    public static Position getPosition(Context context, AttributeSet attrs) {
+    public static String getPosition(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.AdaptivePreference);
         String positionAttribute = typedArray.getString(R.styleable.AdaptivePreference_position);
         typedArray.recycle();
 
-        return Position.fromAttribute(positionAttribute);
+        return positionAttribute;
+    }
+
+    public static boolean isLineageSettings(Context context, AttributeSet attrs) {
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.AdaptivePreference);
+        boolean isLineage = typedArray.getBoolean(R.styleable.AdaptivePreference_isLineageSettings, false);
+        typedArray.recycle();
+
+        return isLineage;
     }
 
     public static int getLayoutResourceId(Context context, AttributeSet attrs) {
-        Position position = getPosition(context, attrs);
-        
-        if (position == null) {
-            return R.layout.top_level_preference_middle_card;
-        }
+        final String positionString = getPosition(context, attrs);
+        return getLayoutResourceId(context, positionString, false);
+    }
 
+    public static int getSettingsTheme(Context context) {
+        /* return Settings.System.getInt(context.getContentResolver(), "settings_theme_style", 0);*/
+        return 1;
+    }
+
+    public static int getLayoutResourceId(Context context, String positionString, boolean isHomePage) {
+        int settingsTheme = getSettingsTheme(context);
+        return getLayoutResourceId(context, settingsTheme, positionString, isHomePage);
+    }
+
+    private static String getLayoutIdentifier(int settingsTheme) {
+        String[] layoutId = {"aosp", "dot", "nad", "oos", "card_colorful"};
+        return layoutId[settingsTheme];
+    }
+
+    private static String getSoloLayoutIdentifier(int settingsTheme) {
+        String[] layoutId = {"aosp", "dot", "nad", "oos", "card_colorful"};
+        return layoutId[settingsTheme];
+    }
+
+    private static String getCustomLayoutIdentifier(int settingsTheme) {
+        return settingsTheme > 1 ? "_mt" : "";
+    }
+
+    public static int getLayoutResourceId(Context context, int settingsTheme, String positionString, boolean isHomePage) {
+        final Position position = Position.fromAttribute(positionString);
+        String layout = getLayoutIdentifier(settingsTheme);
+        if (positionString != null && positionString.equals("wellbeing")) {
+            return context.getResources().getIdentifier("top_level_preference_wellbeing_" + layout, "layout", "com.android.settings");
+        } else if (positionString != null && positionString.equals("google")) {
+            return context.getResources().getIdentifier("top_level_preference_google_" + layout, "layout", "com.android.settings");
+        }
+        if (position == null) {
+            return context.getResources().getIdentifier("top_level_preference_middle_" + layout, "layout", "com.android.settings");
+        }
         switch (position) {
             case TOP:
-                return R.layout.top_level_preference_top_card;
+                return context.getResources().getIdentifier("top_level_preference_top_" + layout, "layout", "com.android.settings");
             case BOTTOM:
-                return R.layout.top_level_preference_bottom_card;
+                return context.getResources().getIdentifier("top_level_preference_bottom_" + layout, "layout", "com.android.settings");
             case MIDDLE:
-                return R.layout.top_level_preference_middle_card;
+                return context.getResources().getIdentifier("top_level_preference_middle_" + layout, "layout", "com.android.settings");
+            default:
             case SOLO:
-                return R.layout.top_level_preference_solo_card;
+                return context.getResources().getIdentifier("top_level_preference_solo_" + getSoloLayoutIdentifier(settingsTheme), "layout", "com.android.settings");
+            case NONE:
+                return -1;
+        }
+    }
+
+    public static int getSeekBarLayoutResourceId(Context context, AttributeSet attrs) {
+        int settingsTheme = getSettingsTheme(context);
+        final String positionString = getPosition(context, attrs);
+        final Position position = Position.fromAttribute(positionString);
+        String layout = getCustomLayoutIdentifier(settingsTheme);
+        if (position == null) {
+            return context.getResources().getIdentifier("preference_custom_seekbar_middle" + layout, "layout", "com.android.settings");
+        }
+        switch (position) {
+            case TOP:
+                return context.getResources().getIdentifier("preference_custom_seekbar_top" + layout, "layout", "com.android.settings");
+            case BOTTOM:
+                return context.getResources().getIdentifier("preference_custom_seekbar_bottom" + layout, "layout", "com.android.settings");
+            case MIDDLE:
+                return context.getResources().getIdentifier("preference_custom_seekbar_middle" + layout, "layout", "com.android.settings");
+            case SOLO:
+                return R.layout.preference_custom_seekbar_solo;
             case NONE:
                 return -1;
             default:
-                return R.layout.top_level_preference_solo_card;
+                return R.layout.preference_custom_seekbar_solo;
+        }
+    }
+
+    public static int getComposeLayoutResourceId(Context context, AttributeSet attrs) {
+        int settingsTheme = getSettingsTheme(context);
+        final String positionString = getPosition(context, attrs);
+        final Position position = Position.fromAttribute(positionString);
+        String layout = getCustomLayoutIdentifier(settingsTheme);
+        if (position == null) {
+            return context.getResources().getIdentifier("preference_compose", "layout", "com.android.settings");
+        }
+        switch (position) {
+            case TOP:
+                return context.getResources().getIdentifier("preference_compose_custom_top" + layout, "layout", "com.android.settings");
+            case BOTTOM:
+                return context.getResources().getIdentifier("preference_compose_custom_bottom" + layout, "layout", "com.android.settings");
+            case MIDDLE:
+                return context.getResources().getIdentifier("preference_compose_custom_middle" + layout, "layout", "com.android.settings");
+            case SOLO:
+                return context.getResources().getIdentifier("preference_compose_custom_solo" + layout, "layout", "com.android.settings");
+            default:
+                return context.getResources().getIdentifier("preference_compose", "layout", "com.android.settings");
+            case NONE:
+                return -1;
         }
     }
 

@@ -41,6 +41,17 @@
             android:targetClass="io.chaldeaprjkt.gamespace.settings.SettingsActivity" />
     </Preference>
 
+    <!-- Keybox import -->
+    <Preference
+        android:key="import_keybox"
+        android:title="@string/import_keybox_title"
+        android:summary="@string/import_keybox_summary" />
+
+    <Preference
+        android:key="clear_keybox"
+        android:title="@string/clear_keybox_title"
+        android:summary="@string/clear_keybox_summary" />
+
     <!-- Unlock FPS for specific games -->
     <com.alpha.settings.preferences.SystemPropertySwitchPreference
         android:key="persist.sys.pixelprops.games"
